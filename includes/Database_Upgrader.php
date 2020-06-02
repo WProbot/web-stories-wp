@@ -59,6 +59,7 @@ class Database_Upgrader {
 		$routines = [
 			'1.0.0' => 'upgrade_1',
 			'2.0.0' => 'v_2_replace_conic_style_presets',
+			'3.0.0' => 'v_3_remove_broken_text_styles',
 		];
 
 		array_walk( $routines, [ $this, 'run_upgrade_routine' ], $version );
@@ -135,6 +136,36 @@ class Database_Upgrader {
 
 		$updated_style_presets = [
 			'fillColors' => $fill_colors,
+			'textColors' => $style_presets['textColors'],
+			'textStyles' => $text_styles,
+		];
+		update_option( Stories_Controller::STYLE_PRESETS_OPTION, $updated_style_presets );
+	}
+
+	/**
+	 * Removes broken text styles (with color.r|g|b structure).
+	 *
+	 * @return void
+	 */
+	protected function v_3_remove_broken_text_styles() {
+		$style_presets = get_option( Stories_Controller::STYLE_PRESETS_OPTION, false );
+		// Nothing to do if style presets don't exist.
+		if ( ! $style_presets || ! is_array( $style_presets ) ) {
+			return;
+		}
+
+		$text_styles = [];
+		if ( ! empty( $style_presets['textStyles'] ) ) {
+			foreach ( $style_presets['textStyles'] as $preset ) {
+				if ( isset( $preset['color']['r'] ) ) {
+					continue;
+				}
+				$text_styles[] = $preset;
+			}
+		}
+
+		$updated_style_presets = [
+			'fillColors' => $style_presets['fillColors'],
 			'textColors' => $style_presets['textColors'],
 			'textStyles' => $text_styles,
 		];
