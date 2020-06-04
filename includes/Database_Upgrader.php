@@ -59,7 +59,7 @@ class Database_Upgrader {
 		$routines = [
 			'1.0.0' => 'upgrade_1',
 			'2.0.0' => 'v_2_replace_conic_style_presets',
-			'3.0.0' => 'v_3_remove_old_text_styles',
+			'2.0.1' => 'v_3_remove_old_text_styles',
 		];
 
 		array_walk( $routines, [ $this, 'run_upgrade_routine' ], $version );
