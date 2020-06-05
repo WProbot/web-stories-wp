@@ -25,7 +25,7 @@ import PropTypes from 'prop-types';
  */
 import useStoryAnimationContext from './useStoryAnimationContext';
 
-function ComposableWrapper({ animationParts, children, style }) {
+function ComposableWrapper({ className, animationParts, children, style }) {
   const ComposedWrapper = useMemo(
     () =>
       animationParts.reduce(
@@ -34,7 +34,9 @@ function ComposableWrapper({ animationParts, children, style }) {
           const Composed = function (props) {
             return (
               <Composable>
-                <AMPTarget style={style}>{props.children}</AMPTarget>
+                <AMPTarget className={className} style={style}>
+                  {props.children}
+                </AMPTarget>
               </Composable>
             );
           };
@@ -43,31 +45,43 @@ function ComposableWrapper({ animationParts, children, style }) {
         },
         (props) => props.children
       ),
-    [animationParts, style]
+    [className, animationParts, style]
   );
 
   return <ComposedWrapper>{children}</ComposedWrapper>;
 }
 
 ComposableWrapper.propTypes = {
+  className: PropTypes.string,
   animationParts: PropTypes.arrayOf(PropTypes.object),
   children: PropTypes.node.isRequired,
   style: PropTypes.object,
 };
 
-function AMPWrapper({ target, children, style }) {
+function AMPWrapper({ className, target, children, style }) {
   const {
     actions: { getAnimationParts },
   } = useStoryAnimationContext();
 
-  return (
-    <ComposableWrapper style={style} animationParts={getAnimationParts(target)}>
+  const animationParts = getAnimationParts(target);
+
+  return animationParts.length > 0 ? (
+    <ComposableWrapper
+      className={className}
+      style={style}
+      animationParts={getAnimationParts(target)}
+    >
       {children}
     </ComposableWrapper>
+  ) : (
+    <div className={className} style={style}>
+      {children}
+    </div>
   );
 }
 
 AMPWrapper.propTypes = {
+  className: PropTypes.string,
   target: PropTypes.string,
   children: PropTypes.node,
   style: PropTypes.object,

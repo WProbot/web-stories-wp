@@ -183,7 +183,10 @@ function Timeline({
 
       onAddOrUpdateAnimation(
         Object.keys(animation)
-          .filter((name) => typeof animation[name] !== 'undefined')
+          .filter(
+            (name) =>
+              typeof animation[name] !== 'undefined' && animation[name] !== ''
+          )
           .reduce(
             (acc, name) => ({
               ...acc,

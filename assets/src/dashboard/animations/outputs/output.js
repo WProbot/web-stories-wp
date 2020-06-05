@@ -21,6 +21,7 @@ import PropTypes from 'prop-types';
 
 function WithAnimation({
   id,
+  className,
   style,
   animationStyle,
   useClippingContainer,
@@ -28,6 +29,7 @@ function WithAnimation({
 }) {
   return useClippingContainer ? (
     <div
+      className={className}
       style={{
         clipPath: 'inset(0)',
         ...style,
@@ -38,7 +40,7 @@ function WithAnimation({
       </div>
     </div>
   ) : (
-    <div id={id} style={{ ...style, ...animationStyle }}>
+    <div id={id} className={className} style={{ ...style, ...animationStyle }}>
       {children}
     </div>
   );
@@ -46,6 +48,7 @@ function WithAnimation({
 
 WithAnimation.propTypes = {
   id: PropTypes.string,
+  className: PropTypes.string,
   style: PropTypes.object,
   animationStyle: PropTypes.object,
   useClippingContainer: PropTypes.bool,

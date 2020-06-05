@@ -28,9 +28,10 @@
  * Always includes the runtime as well as the amp-story extension.
  *
  * @param {Array} pages List of pages.
+ * @param {Array} enableAnimation Boolean to determine if amp-animations should be included.
  * @return {Array<Extension>} List of used AMP extensions.
  */
-const getUsedAmpExtensions = (pages) => {
+const getUsedAmpExtensions = (pages, enableAnimation) => {
   const extensions = [
     // runtime.
     { src: 'https://cdn.ampproject.org/v0.js' },
@@ -39,6 +40,13 @@ const getUsedAmpExtensions = (pages) => {
       src: 'https://cdn.ampproject.org/v0/amp-story-1.0.js',
     },
   ];
+
+  if (enableAnimation) {
+    extensions.push({
+      name: 'amp-animation',
+      src: 'https://cdn.ampproject.org/v0/amp-animation-0.1.js',
+    });
+  }
 
   const ampVideo = {
     name: 'amp-video',

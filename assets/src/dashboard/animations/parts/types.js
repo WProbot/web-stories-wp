@@ -24,6 +24,7 @@ export const WAAPIAnimationProps = {
 };
 
 export const AMPAnimationProps = {
+  className: PropTypes.string,
   children: PropTypes.node,
   style: PropTypes.object,
   prefixId: PropTypes.string,

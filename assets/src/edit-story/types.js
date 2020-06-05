@@ -101,6 +101,7 @@ StoryPropTypes.box = PropTypes.exact({
 
 StoryPropTypes.page = PropTypes.shape({
   id: PropTypes.string.isRequired,
+  animations: PropTypes.arrayOf(PropTypes.object),
   elements: PropTypes.arrayOf(PropTypes.shape(StoryPropTypes.element)),
   backgroundOverlay: PropTypes.oneOf(Object.values(OverlayType)),
 });

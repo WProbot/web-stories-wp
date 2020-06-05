@@ -22,6 +22,7 @@ import PropTypes from 'prop-types';
 /**
  * Internal dependencies
  */
+import StoryAnimation from '../../dashboard/components/storyAnimation';
 import StoryPropTypes from '../types';
 import { PAGE_WIDTH, PAGE_HEIGHT } from '../constants';
 import { generateOverlayStyles, OverlayType } from '../utils/backgroundOverlay';
@@ -31,7 +32,7 @@ import getLongestMediaElement from './utils/getLongestMediaElement';
 const ASPECT_RATIO = `${PAGE_WIDTH}:${PAGE_HEIGHT}`;
 
 function OutputPage({ page, autoAdvance, defaultPageDuration }) {
-  const { id, elements, backgroundOverlay } = page;
+  const { id, animations = [], elements, backgroundOverlay } = page;
   const backgroundStyles = {
     backgroundColor: 'white',
     backgroundImage: `linear-gradient(45deg, #999999 25%, transparent 25%),
@@ -55,32 +56,37 @@ function OutputPage({ page, autoAdvance, defaultPageDuration }) {
       id={id}
       auto-advance-after={autoAdvance ? autoAdvanceAfter : undefined}
     >
-      {backgroundElements.length > 0 && (
-        <amp-story-grid-layer template="vertical">
-          <div className="page-background-area" style={backgroundStyles}>
-            {backgroundElements.map((element) => (
+      <StoryAnimation.Provider animations={animations}>
+        <StoryAnimation.AMPKeyframes />
+        <StoryAnimation.AMPAnimations />
+
+        {backgroundElements.length > 0 && (
+          <amp-story-grid-layer template="vertical">
+            <div className="page-background-area" style={backgroundStyles}>
+              {backgroundElements.map((element) => (
+                <OutputElement key={'el-' + element.id} element={element} />
+              ))}
+            </div>
+          </amp-story-grid-layer>
+        )}
+
+        {backgroundOverlay && backgroundOverlay !== OverlayType.NONE && (
+          <amp-story-grid-layer template="vertical">
+            <div
+              className="page-background-overlay-area"
+              style={{ ...backgroundOverlayStyles }}
+            />
+          </amp-story-grid-layer>
+        )}
+
+        <amp-story-grid-layer template="vertical" aspect-ratio={ASPECT_RATIO}>
+          <div className="page-safe-area">
+            {regularElements.map((element) => (
               <OutputElement key={'el-' + element.id} element={element} />
             ))}
           </div>
         </amp-story-grid-layer>
-      )}
-
-      {backgroundOverlay && backgroundOverlay !== OverlayType.NONE && (
-        <amp-story-grid-layer template="vertical">
-          <div
-            className="page-background-overlay-area"
-            style={{ ...backgroundOverlayStyles }}
-          />
-        </amp-story-grid-layer>
-      )}
-
-      <amp-story-grid-layer template="vertical" aspect-ratio={ASPECT_RATIO}>
-        <div className="page-safe-area">
-          {regularElements.map((element) => (
-            <OutputElement key={'el-' + element.id} element={element} />
-          ))}
-        </div>
-      </amp-story-grid-layer>
+      </StoryAnimation.Provider>
     </amp-story-page>
   );
 }

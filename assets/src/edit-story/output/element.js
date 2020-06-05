@@ -17,6 +17,7 @@
 /**
  * Internal dependencies
  */
+import StoryAnimation from '../../dashboard/components/storyAnimation';
 import StoryPropTypes from '../types';
 import WithMask from '../masks/output';
 import { getDefinitionForType } from '../elements';
@@ -33,10 +34,8 @@ function OutputElement({ element }) {
   const { x, y, width, height, rotationAngle } = box;
 
   return (
-    <WithMask
-      element={element}
-      box={box}
-      id={'el-' + id}
+    <StoryAnimation.AMPWrapper
+      target={id}
       className="wrapper"
       style={{
         left: `${x}%`,
@@ -47,8 +46,10 @@ function OutputElement({ element }) {
         opacity: opacity ? opacity / 100 : null,
       }}
     >
-      <WithLink
+      <WithMask
         element={element}
+        box={box}
+        id={'el-' + id}
         style={{
           width: '100%',
           height: '100%',
@@ -58,9 +59,21 @@ function OutputElement({ element }) {
           left: 0,
         }}
       >
-        <Output element={element} box={box} />
-      </WithLink>
-    </WithMask>
+        <WithLink
+          element={element}
+          style={{
+            width: '100%',
+            height: '100%',
+            display: 'block',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+        >
+          <Output element={element} box={box} />
+        </WithLink>
+      </WithMask>
+    </StoryAnimation.AMPWrapper>
   );
 }
 

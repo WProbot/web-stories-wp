@@ -59,14 +59,16 @@ function SimpleAnimation(
 
   WAAPIAnimation.propTypes = WAAPIAnimationProps;
 
-  const AMPTarget = function ({ children, style }) {
+  const AMPTarget = function ({ className, children, style }) {
     const options = useClippingContainer
       ? {
+          className,
           useClippingContainer: useClippingContainer,
           style,
           animationStyle: getInitialStyleFromKeyframes(keyframes),
         }
       : {
+          className,
           style: {
             ...style,
             ...getInitialStyleFromKeyframes(keyframes),

@@ -18,6 +18,7 @@
  * External dependencies
  */
 import PropTypes from 'prop-types';
+import { FlagsProvider } from 'flagged';
 
 /**
  * Internal dependencies
@@ -34,48 +35,52 @@ function OutputStory({
   pages,
   metadata: { publisher, fallbackPoster, logoPlaceholder },
 }) {
-  const ampExtensions = getUsedAmpExtensions(pages);
+  const { flags } = window.webStoriesEditorSettings;
+
+  const ampExtensions = getUsedAmpExtensions(pages, flags['enableAnimation']);
   const fontDeclarations = getFontDeclarations(pages);
   return (
-    <html amp="" lang="en">
-      <head>
-        <meta charSet="utf-8" />
-        <meta
-          name="viewport"
-          content="width=device-width,minimum-scale=1,initial-scale=1"
-        />
-        {ampExtensions.map(({ name, src }) => (
-          <script key={src} async="async" src={src} custom-element={name} />
-        ))}
-        {fontDeclarations.map((url) => (
-          <link key={url} href={url} rel="stylesheet" />
-        ))}
-        <Boilerplate />
-        <CustomCSS />
-        {/* Everything between these markers can be replaced server-side. */}
-        <meta name="web-stories-replace-head-start" />
-        <link rel="canonical" href={link} />
-        <meta name="web-stories-replace-head-end" />
-      </head>
-      <body>
-        <amp-story
-          standalone="standalone"
-          publisher={publisher.name}
-          publisher-logo-src={logoPlaceholder}
-          title={title}
-          poster-portrait-src={featuredMediaUrl || fallbackPoster}
-        >
-          {pages.map((page) => (
-            <OutputPage
-              key={page.id}
-              page={page}
-              autoAdvance={autoAdvance}
-              defaultPageDuration={defaultPageDuration}
-            />
+    <FlagsProvider features={flags}>
+      <html amp="" lang="en">
+        <head>
+          <meta charSet="utf-8" />
+          <meta
+            name="viewport"
+            content="width=device-width,minimum-scale=1,initial-scale=1"
+          />
+          {ampExtensions.map(({ name, src }) => (
+            <script key={src} async="async" src={src} custom-element={name} />
           ))}
-        </amp-story>
-      </body>
-    </html>
+          {fontDeclarations.map((url) => (
+            <link key={url} href={url} rel="stylesheet" />
+          ))}
+          <Boilerplate />
+          <CustomCSS />
+          {/* Everything between these markers can be replaced server-side. */}
+          <meta name="web-stories-replace-head-start" />
+          <link rel="canonical" href={link} />
+          <meta name="web-stories-replace-head-end" />
+        </head>
+        <body>
+          <amp-story
+            standalone="standalone"
+            publisher={publisher.name}
+            publisher-logo-src={logoPlaceholder}
+            title={title}
+            poster-portrait-src={featuredMediaUrl || fallbackPoster}
+          >
+            {pages.map((page) => (
+              <OutputPage
+                key={page.id}
+                page={page}
+                autoAdvance={autoAdvance}
+                defaultPageDuration={defaultPageDuration}
+              />
+            ))}
+          </amp-story>
+        </body>
+      </html>
+    </FlagsProvider>
   );
 }
 
