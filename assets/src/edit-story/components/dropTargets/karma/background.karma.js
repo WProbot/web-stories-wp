@@ -530,7 +530,7 @@ function getCanvasElementWrapperById(fixture, id) {
   return fixture.querySelector(`[data-element-id="${id}"]`);
 }
 
-async function getBackgroundElementId(fixture) {
+export async function getBackgroundElementId(fixture) {
   const {
     state: {
       currentPage: {
